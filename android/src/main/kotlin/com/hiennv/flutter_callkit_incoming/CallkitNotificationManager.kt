@@ -400,13 +400,14 @@ class CallkitNotificationManager(
     @SuppressLint("MissingPermission")
     fun showMissCallNotification(data: Bundle) {
 
-                    if (data.isEmpty ||
-        (
-            data.getString(CallkitConstants.EXTRA_CALLKIT_MISSED_CALL_ID).isNullOrEmpty() &&
-            data.getString(CallkitConstants.EXTRA_CALLKIT_ID).isNullOrEmpty()
-        )
-    ) {
-        clearMissCallNotification(data)
+    val hasValidMissedCallId =
+        !data.getString(CallkitConstants.EXTRA_CALLKIT_MISSED_CALL_ID).isNullOrEmpty()
+
+    val hasCallerInfo =
+        !data.getString(CallkitConstants.EXTRA_CALLKIT_NAME_CALLER).isNullOrEmpty() ||
+        !data.getString(CallkitConstants.EXTRA_CALLKIT_HANDLE).isNullOrEmpty()
+
+    if (!hasValidMissedCallId || !hasCallerInfo) {
         return
     }
 
