@@ -406,7 +406,7 @@ class CallkitNotificationManager(
             data.getString(CallkitConstants.EXTRA_CALLKIT_ID).isNullOrEmpty()
         )
     ) {
-        clearAllMissedCallNotifications()
+        clearMissCallNotification(data)
         return
     }
 
