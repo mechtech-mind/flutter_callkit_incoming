@@ -414,6 +414,7 @@ public class SwiftFlutterCallkitIncomingPlugin: NSObject, FlutterPlugin, CXProvi
     }
     
     @objc public func connectedCall(_ data: Data) {
+        print("🔥 connectedCall() called for \(call.uuid)")
         // Guard against malformed UUID — see CallManager.swift:startCall for rationale.
         let uuidSourceString: String
         if self.isFromPushKit {
@@ -649,6 +650,7 @@ public class SwiftFlutterCallkitIncomingPlugin: NSObject, FlutterPlugin, CXProvi
     }
     
     public func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
+        print("🔥 CXAnswerCallAction \(action.callUUID)")
         guard let call = self.callManager.callWithUUID(uuid: action.callUUID) else{
             action.fail()
             return
