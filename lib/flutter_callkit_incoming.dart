@@ -83,8 +83,13 @@ class FlutterCallkitIncoming {
   /// Event.ACTION_CALL_TOGGLE_AUDIO_SESSION - only iOS
   /// Event.DID_UPDATE_DEVICE_PUSH_TOKEN_VOIP - only iOS
   /// }
-  static Stream<CallEvent?> get onEvent =>
-      _eventChannel.receiveBroadcastStream().map(_receiveCallEvent);
+    static Stream<CallEvent?> get onEvent =>
+        _eventChannel.receiveBroadcastStream().map((raw) {
+          debugPrint("========== RAW EVENT ==========");
+          debugPrint(raw.toString());
+
+          return _receiveCallEvent(raw);
+        });
 
   /// Handle accept call from background when the app was killed.
   static void acceptCallHandle(ActionEvent handler) {
