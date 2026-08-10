@@ -82,5 +82,17 @@
             </intent-filter>
         </service>
 
+                <activity
+            android:name=".CallNotificationService"
+            android:exported="false"
+            android:launchMode="singleInstancePerTask"
+            android:documentLaunchMode="always"
+            android:excludeFromRecents="false" />
+
+        <!-- Flutter embedding -->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+
     </application>
 </manifest>

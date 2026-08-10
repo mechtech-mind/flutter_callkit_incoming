@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import com.wowphonedev.softphone.CallNotificationService
 
 class TransparentActivity : Activity() {
 
@@ -46,8 +47,23 @@ class TransparentActivity : Activity() {
         broadcastIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
         sendBroadcast(broadcastIntent)
 
-        val activityIntent = AppUtils.getAppIntent(this, action, data)
-        startActivity(activityIntent)
+                val activityIntent = Intent(
+                    this,
+                    CallNotificationService::class.java
+                ).apply {
+                    this.action = action
+                    putExtra(
+                        FlutterCallkitIncomingPlugin.EXTRA_CALLKIT_CALL_DATA,
+                        data
+                    )
+
+                    addFlags(
+                        Intent.FLAG_ACTIVITY_NEW_TASK or
+                        Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    )
+                }
+
+                startActivity(activityIntent)
 
         finish()
         overridePendingTransition(0, 0)
