@@ -5,13 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import com.wowphonedev.softphone.CallNotificationService
 
 class TransparentActivity : Activity() {
 
     companion object {
-        private const val TAG = "TransparentActivity"
-
         var isVisible: Boolean = false
 
         fun getIntent(
@@ -39,50 +36,26 @@ class TransparentActivity : Activity() {
 
     override fun onStart() {
         super.onStart()
-
-        Log.d(
-            TAG,
-            "onStart() action=${intent?.action}"
-        )
-
         setVisible(false)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.d(TAG, "========================================")
-        Log.d(TAG, "TransparentActivity.onCreate()")
-        Log.d(TAG, "intent.action=${intent?.action}")
-
-        val action = intent?.action
+        val action = intent.action
 
         if (action == null) {
             Log.w(
-                TAG,
-                "Intent action is NULL. Finishing."
+                "TransparentActivity",
+                "Intent action is null, finishing activity"
             )
-
             finish()
             return
         }
 
         val data = intent.getBundleExtra("data")
 
-        Log.d(
-            TAG,
-            "Received action=$action"
-        )
-
-        // ============================================================
-        // 1. PRESERVE THE ORIGINAL CALLKIT BROADCAST PATH
-        // ============================================================
-
-        Log.d(
-            TAG,
-            "Sending broadcast to CallkitIncomingBroadcastReceiver"
-        )
-
+        // Native CallKit handling.
         val broadcastIntent =
             CallkitIncomingBroadcastReceiver.getIntent(
                 this,
@@ -96,23 +69,10 @@ class TransparentActivity : Activity() {
 
         sendBroadcast(broadcastIntent)
 
-        Log.d(
-            TAG,
-            "CallkitIncomingBroadcastReceiver broadcast sent"
-        )
-
-        // ============================================================
-        // 2. START OUR SECONDARY FLUTTER ENGINE
-        // ============================================================
-
-        Log.d(
-            TAG,
-            "Starting CallNotificationService"
-        )
-
+        // Launch the separate Flutter activity.
         val activityIntent = Intent(
             this,
-            CallNotificationService::class.java
+            com.wowphonedev.softphone.CallNotificationService::class.java
         ).apply {
 
             this.action = action
@@ -130,15 +90,7 @@ class TransparentActivity : Activity() {
 
         startActivity(activityIntent)
 
-        Log.d(
-            TAG,
-            "CallNotificationService started"
-        )
-
         finish()
         overridePendingTransition(0, 0)
-
-        Log.d(TAG, "TransparentActivity finished")
-        Log.d(TAG, "========================================")
     }
 }
