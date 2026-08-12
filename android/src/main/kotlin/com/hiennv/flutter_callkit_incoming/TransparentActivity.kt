@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import com.wowphonedev.softphone.CallNotificationService
 
 class TransparentActivity : Activity() {
 
@@ -24,7 +25,6 @@ class TransparentActivity : Activity() {
         }
     }
 
-
     override fun onStart() {
         super.onStart()
         setVisible(false)
@@ -42,12 +42,45 @@ class TransparentActivity : Activity() {
 
         val data = intent.getBundleExtra("data")
 
-        val broadcastIntent = CallkitIncomingBroadcastReceiver.getIntent(this, action, data)
+        // Original broadcast behavior
+        val broadcastIntent =
+            CallkitIncomingBroadcastReceiver.getIntent(this, action, data)
+
         broadcastIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
         sendBroadcast(broadcastIntent)
 
-        val activityIntent = AppUtils.getAppIntent(this, action, data)
+        // Original app launch behavior
+        val activityIntent =
+            AppUtils.getAppIntent(this, action, data)
+
         startActivity(activityIntent)
+
+        // Launch your Flutter CallNotificationService as well
+        try {
+            Log.d(
+                "TransparentActivity",
+                "Launching CallNotificationService"
+            )
+
+            val notificationIntent = Intent(
+                this,
+                CallNotificationService::class.java
+            )
+
+            notificationIntent.addFlags(
+                Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
+                Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+            )
+
+            startActivity(notificationIntent)
+
+        } catch (e: Exception) {
+            Log.e(
+                "TransparentActivity",
+                "Failed to launch CallNotificationService",
+                e
+            )
+        }
 
         finish()
         overridePendingTransition(0, 0)
