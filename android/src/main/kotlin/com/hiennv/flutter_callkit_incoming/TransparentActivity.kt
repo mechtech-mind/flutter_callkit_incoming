@@ -74,20 +74,6 @@ class TransparentActivity : Activity() {
             "Received action=$action"
         )
 
-        Log.d(
-            TAG,
-            "Received data=$data"
-        )
-
-        if (data != null) {
-            for (key in data.keySet()) {
-                Log.d(
-                    TAG,
-                    "data[$key]=${data.get(key)}"
-                )
-            }
-        }
-
         // ============================================================
         // 1. PRESERVE THE ORIGINAL CALLKIT BROADCAST PATH
         // ============================================================
