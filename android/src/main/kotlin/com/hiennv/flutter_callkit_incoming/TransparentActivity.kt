@@ -55,7 +55,7 @@ class TransparentActivity : Activity() {
 
         val data = intent.getBundleExtra("data")
 
-        // Native CallKit handling.
+        // Keep the original native CallKit broadcast.
         val broadcastIntent =
             CallkitIncomingBroadcastReceiver.getIntent(
                 this,
@@ -69,24 +69,13 @@ class TransparentActivity : Activity() {
 
         sendBroadcast(broadcastIntent)
 
-        // Launch the separate Flutter activity.
-        val activityIntent = Intent(
-            this,
-            com.wowphonedev.softphone.CallNotificationService::class.java
-        ).apply {
-
-            this.action = action
-
-            putExtra(
-                FlutterCallkitIncomingPlugin.EXTRA_CALLKIT_CALL_DATA,
+        // Keep AppUtils as the original application launch path.
+        val activityIntent =
+            AppUtils.getAppIntent(
+                this,
+                action,
                 data
             )
-
-            addFlags(
-                Intent.FLAG_ACTIVITY_NEW_TASK or
-                    Intent.FLAG_ACTIVITY_SINGLE_TOP
-            )
-        }
 
         startActivity(activityIntent)
 
