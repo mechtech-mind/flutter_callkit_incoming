@@ -4,9 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.graphics.drawable.GradientDrawable
-import com.wowphonedev.softphone.CallNotificationService
 
 object AppUtils {
+
+    private const val CALL_NOTIFICATION_SERVICE =
+        "com.wowphonedev.softphone.CallNotificationService"
 
     fun getAppIntent(
         context: Context,
@@ -14,9 +16,11 @@ object AppUtils {
         data: Bundle? = null
     ): Intent {
 
-        val intent = Intent(
+        val intent = Intent()
+
+        intent.setClassName(
             context,
-            CallNotificationService::class.java
+            CALL_NOTIFICATION_SERVICE
         )
 
         intent.action = action
@@ -32,7 +36,6 @@ object AppUtils {
     fun createCircleDrawable(
         fillColor: Int
     ): GradientDrawable {
-
         val shape = GradientDrawable()
 
         shape.setShape(
