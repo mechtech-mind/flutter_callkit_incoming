@@ -46,8 +46,17 @@ class TransparentActivity : Activity() {
         broadcastIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
         sendBroadcast(broadcastIntent)
 
-        val activityIntent = AppUtils.getAppIntent(this, action, data)
-        startActivity(activityIntent)
+                val serviceIntent = AppUtils.getAppIntent(
+                    this,
+                    action,
+                    data
+                )
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    startForegroundService(serviceIntent)
+                } else {
+                    startService(serviceIntent)
+                }
 
         finish()
         overridePendingTransition(0, 0)
